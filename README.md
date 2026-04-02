@@ -6,6 +6,79 @@
 
 本项目是一个基于 Flask 的 Web 应用，用于收集用户多端行为数据（Chrome浏览器、Claude Code对话、手机OCR），整合成时间轴，并支持用户任务管理功能。
 
+## 系统架构图
+
+```mermaid
+flowchart TD
+    %% 定义样式
+    classDef phaseStyle fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,rx:10,ry:10,color:#0d47a1,font-weight:bold;
+    classDef actionStyle fill:#fff3e0,stroke:#ef6c00,stroke-width:2px,rx:5,ry:5,color:#e65100,font-weight:bold;
+    classDef dataStyle fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,stroke-dasharray: 5 5,rx:5,ry:5,color:#1b5e20;
+    classDef containerStyle fill:#f8f9fa,stroke:#6c757d,stroke-width:1px,rx:15,ry:15,stroke-dasharray: 5 5,color:#343a40,font-weight:bold;
+
+    %% 第一块：需求发现
+    subgraph Phase1 [🔍 第一阶段：需求发现]
+        direction TB
+        UserInteraction[🗣️ 用户交互<br/>确认主线任务]:::phaseStyle
+        AIGenerate[🤖 AI 生成子任务<br/>初始化任务状态]:::actionStyle
+        ConfirmStatus[✅ 用户确认任务状态]:::actionStyle
+        UserInteraction --> AIGenerate --> ConfirmStatus
+    end
+
+    %% 第二块：用户行为数据收集分析
+    subgraph Phase2 [📊 第二阶段：用户行为数据收集分析]
+        direction TB
+        DataCollection[🌐 多元信息收集]:::phaseStyle
+
+        subgraph DataSource [📂 数据源]
+            Browser[🌍 浏览器记录]:::dataStyle
+            ClaudeCode[💻 ClaudeCode 记录]:::dataStyle
+            Mobile[📱 手机记录]:::dataStyle
+        end
+
+        Analysis[📉 汇集三方数据<br/>分析子任务进度]:::phaseStyle
+    end
+
+    %% 数据流向
+    DataCollection --> Browser & ClaudeCode & Mobile
+    Browser & ClaudeCode & Mobile --> Analysis
+
+    %% 第三块：任务确认
+    subgraph Phase3 [🧩 第三阶段：任务确认]
+        direction TB
+        Recommend[🤔 AI 推荐辅助任务]:::actionStyle
+        UserConfirm[👤 用户确认任务]:::phaseStyle
+    end
+
+    %% 第四块：夜间执行
+    subgraph Phase4 [🌙 第四阶段：夜间执行]
+        direction TB
+        NightSchedule[⚙️ 调度 OpenClaw<br/>静默执行任务]:::actionStyle
+        Report[📄 生成执行报告]:::phaseStyle
+    end
+
+    %% 第五块：晨间反馈
+    subgraph Phase5 [☀️ 第五阶段：晨间反馈]
+        direction TB
+        CheckReport[👀 用户 Check 执行报告]:::phaseStyle
+        Feedback[💬 用户反馈]:::actionStyle
+        UpdateStatus[🔄 AI 更新子任务状态]:::phaseStyle
+    end
+
+    %% 主流程连接
+    ConfirmStatus --> DataCollection
+    Analysis --> Recommend
+    Recommend --> UserConfirm
+    UserConfirm --> NightSchedule
+    NightSchedule --> Report
+    Report --> CheckReport
+    CheckReport --> Feedback
+    Feedback --> UpdateStatus
+
+    %% 闭环连接：修正终点为用户确认任务状态
+    UpdateStatus -.->|🚀 进入下一轮循环| ConfirmStatus
+```
+
 ## 技术架构
 
 | 层级 | 技术 |
