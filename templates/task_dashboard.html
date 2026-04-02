@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务仪表盘 - TimelineForClawd</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.8);
+            font-size: 16px;
+        }
+
+        .nav-links {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            margin: 0 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .task-section {
+            margin-bottom: 30px;
+        }
+
+        .section-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .task-card {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .task-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .task-card .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-in_progress { background: #cce5ff; color: #004085; }
+        .status-completed { background: #d4edda; color: #155724; }
+
+        .task-card h3 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+            padding-right: 80px;
+        }
+
+        .task-card p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .task-meta span {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .behavior-count {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-card .label {
+            font-size: 14px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .task-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>任务仪表盘</h1>
+            <p>查看你的任务进度和行为分析</p>
+        </div>
+
+        <div class="nav-links">
+            <a href="/">时间轴</a>
+            <a href="/tasks">任务管理</a>
+            <a href="/input">添加任务</a>
+            <a href="/analysis">AI分析</a>
+        </div>
+
+        <!-- 统计卡片 -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="value" id="totalTasks">-</div>
+                <div class="label">总任务数</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" id="inProgress">-</div>
+                <div class="label">进行中</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" id="completed">-</div>
+                <div class="label">已完成</div>
+            </div>
+            <div class="stat-card">
+                <div class="value" id="totalBehaviors">-</div>
+                <div class="label">关联行为</div>
+            </div>
+        </div>
+
+        <!-- 任务列表 -->
+        <div class="card">
+            <div class="card-title">所有任务</div>
+            <div class="task-grid" id="shortTermTasks">
+                <div class="empty-state">加载中...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadTasks() {
+            try {
+                const response = await fetch('/api/tasks');
+                const data = await response.json();
+
+                // 更新统计
+                const allTasks = data.tasks || [];
+                const total = allTasks.length;
+
+                const inProgress = allTasks.filter(t => t.status === 'in_progress').length;
+                const completed = allTasks.filter(t => t.status === 'completed').length;
+
+                document.getElementById('totalTasks').textContent = total;
+                document.getElementById('inProgress').textContent = inProgress;
+                document.getElementById('completed').textContent = completed;
+
+                // 获取行为统计
+                const behaviorRes = await fetch('/api/task-behaviors');
+                const behaviorData = await behaviorRes.ok ? await behaviorRes.json() : {};
+                document.getElementById('totalBehaviors').textContent =
+                    Object.values(behaviorData).reduce((sum, t) => sum + (t.matched_records?.length || 0), 0);
+
+                // 渲染任务列表
+                const taskList = document.getElementById('shortTermTasks');
+                if (allTasks.length === 0) {
+                    taskList.innerHTML = '<div class="empty-state">暂无任务 <a href="/input">去添加</a></div>';
+                } else {
+                    taskList.innerHTML = allTasks.map(task => {
+                        const behaviors = behaviorData[task.id]?.matched_records || [];
+                        const progress = behaviorData[task.id]?.progress_percent || 0;
+                        return `
+                            <div class="task-card">
+                                <span class="status-badge status-${task.status}">
+                                    ${task.status === 'in_progress' ? '进行中' : task.status === 'completed' ? '已完成' : '未开始'}
+                                </span>
+                                <h3>${task.name}</h3>
+                                <p>${task.description || '暂无描述'}</p>
+                                ${task.deadline ? `<span>截止: ${task.deadline}</span>` : ''}
+                                <div class="behavior-count">📊 ${behaviors.length} 条关联行为</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${progress}%"></div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch (error) {
+                console.error('加载任务失败:', error);
+            }
+        }
+
+        window.onload = loadTasks;
+    </script>
+</body>
+</html>

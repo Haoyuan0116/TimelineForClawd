@@ -1,0 +1,62 @@
+[
+  {
+    "chrome": {
+      "url": "https://www.notion.so/Getting-Started-566e7c52f4a04304ad9e3553228c4dc8",
+      "domain": "www.notion.so",
+      "title": "www.notion.so",
+      "summary": "",
+      "keywords": [],
+      "durationSeconds": 3,
+      "startTimeReadable": "2026-03-24 14:28:36",
+      "endTimeReadable": "2026-03-24 14:28:39",
+      "behavior": null
+    },
+    "time": "2026-03-24T14:28:36.562000+08:00",
+    "source": "chrome"
+  },
+  {
+    "chrome": {
+      "url": "https://www.notion.so/Getting-Started-566e7c52f4a04304ad9e3553228c4dc8",
+      "domain": "www.notion.so",
+      "title": "Notion – The all-in-one workspace for your notes, tasks, wikis, and databases.",
+      "summary": "A tool that connects everyday work into one space. It gives you and your teams AI tools—search, writing, note-taking—inside an all-in-one, flexible workspace.",
+      "keywords": [],
+      "durationSeconds": 23,
+      "startTimeReadable": "2026-03-24 14:28:49",
+      "endTimeReadable": "2026-03-24 14:29:29",
+      "behavior": null
+    },
+    "time": "2026-03-24T14:28:49.779000+08:00",
+    "source": "chrome"
+  },
+  {
+    "chrome": {
+      "url": "https://www.baidu.com/",
+      "domain": "www.baidu.com",
+      "title": "百度一下，你就知道",
+      "summary": "全球领先的中文搜索引擎、致力于让网民更便捷地获取信息，找到所求。百度超过千亿的中文网页数据库，可以瞬间找到相关的搜索结果。",
+      "keywords": [],
+      "durationSeconds": 30,
+      "startTimeReadable": "2026-03-24 14:29:50",
+      "endTimeReadable": "2026-03-24 14:30:50",
+      "behavior": null
+    },
+    "time": "2026-03-24T14:29:50.336000+08:00",
+    "source": "chrome"
+  },
+  {
+    "chrome": {
+      "url": "https://www.kimi.com/chat/19d1e009-9ad2-81b1-8000-090b30f58ba7?chat_enter_method=home",
+      "domain": "www.kimi.com",
+      "title": "插件CSP报错 - Kimi",
+      "summary": "",
+      "keywords": [],
+      "durationSeconds": 17,
+      "startTimeReadable": "2026-03-24 14:30:50",
+      "endTimeReadable": "2026-03-24 14:31:08",
+      "behavior": null
+    },
+    "time": "2026-03-24T14:30:50.997000+08:00",
+    "source": "chrome"
+  }
+]

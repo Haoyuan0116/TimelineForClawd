@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务设置 - TimelineForClawd</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.8);
+            font-size: 16px;
+        }
+
+        .nav-links {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            margin: 0 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .task-list {
+            margin-bottom: 20px;
+        }
+
+        .task-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .task-item input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .task-item input[type="text"]:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .task-item textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .task-item textarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .task-meta select {
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .task-meta input[type="date"] {
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            transition: all 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            background: #ff3344;
+            transform: scale(1.1);
+        }
+
+        .add-btn {
+            width: 100%;
+            padding: 15px;
+            border: 2px dashed #ddd;
+            border-radius: 12px;
+            background: transparent;
+            color: #666;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .section-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px;
+            background: #2ed573;
+            color: white;
+            border-radius: 10px;
+            font-size: 16px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .card {
+                padding: 20px;
+                border-radius: 15px;
+            }
+
+            .task-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="message" id="message">保存成功！</div>
+
+    <div class="container">
+        <div class="header">
+            <h1>任务设置</h1>
+            <p>设置你的任务列表</p>
+        </div>
+
+        <div class="nav-links">
+            <a href="/">时间轴</a>
+            <a href="/tasks">任务管理</a>
+            <a href="/analysis">AI分析</a>
+        </div>
+
+        <!-- 任务列表 -->
+        <div class="card">
+            <div class="card-title">任务列表</div>
+
+            <div class="section-label">添加你的任务</div>
+
+            <div class="task-list" id="shortTermList">
+                <!-- 动态添加任务项 -->
+            </div>
+
+            <button class="add-btn" onclick="addNewTask()">+ 添加任务</button>
+        </div>
+
+        <button class="submit-btn" onclick="saveTasks()">保存任务配置</button>
+    </div>
+
+    <div id="message" style="display:none;"></div>
+
+    <style>
+        .sub-tasks-edit-area { margin-top: 10px; padding: 10px; background: #f5f5f5; border-radius: 5px; }
+        .sub-task-edit-item { display: flex; gap: 10px; margin-bottom: 8px; }
+        .sub-task-edit-item input { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .sub-task-edit-item select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .sub-tasks-container { margin-top: 10px; }
+        .sub-task-display-item { padding: 5px 10px; margin: 5px 0; background: #e8f5e9; border-radius: 4px; display: flex; justify-content: space-between; }
+        .status-pending { color: #ff9800; }
+        .status-completed { color: #4caf50; }
+        .decompose-btn { background: #2196f3; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .decompose-btn:hover { background: #1976d2; }
+        .decompose-btn:disabled { background: #ccc; }
+        .confirm-sub-btn { background: #4caf50; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+    </style>
+
+    <script>
+        let pendingSubTasks = {};
+
+        function createTaskElement(type, task = null) {
+            const id = `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            const div = document.createElement('div');
+            div.className = 'task-item';
+            div.id = id;
+
+            const subTasksHtml = task?.sub_tasks?.length ? `
+                <div class="sub-tasks-container" id="display_sub_${id}">
+                    ${task.sub_tasks.map((sub, i) => `
+                        <div class="sub-task-display-item">
+                            <span>• ${sub.name}</span>
+                            <span class="status-${sub.status}">${sub.status === 'pending' ? '未开始' : '已完成'}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            ` : '';
+
+            div.innerHTML = `
+                <button class="remove-btn" onclick="removeTask('${id}')">×</button>
+                <input type="text" placeholder="任务名称" value="${task?.name || ''}" class="task-name-input">
+                <textarea placeholder="任务描述（可选）">${task?.description || ''}</textarea>
+                <div class="task-meta">
+                    <input type="date" placeholder="截止日期" value="${task?.deadline || ''}">
+                </div>
+                ${task?.sub_tasks?.length ? '' : `<button class="decompose-btn" onclick="decomposeTask('${id}')">🤖 AI拆解子任务</button>
+                <div class="sub-tasks-edit-area" id="sub_${id}" style="display:none;">
+                    <div class="sub-tasks-list"></div>
+                    <button type="button" class="confirm-sub-btn" onclick="confirmSubTasks('${id}')">确认子任务</button>
+                </div>`}
+                ${subTasksHtml}
+            `;
+
+            return div;
+        }
+
+        function addNewTask() {
+            const list = document.getElementById('shortTermList');
+            const taskEl = createTaskElement('new');
+            list.appendChild(taskEl);
+        }
+
+        function removeTask(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                delete pendingSubTasks[id];
+                el.remove();
+            }
+        }
+
+        async function decomposeTask(taskId) {
+            const taskEl = document.getElementById(taskId);
+            const nameInput = taskEl.querySelector('.task-name-input');
+            const descInput = taskEl.querySelector('textarea');
+
+            const taskName = nameInput.value.trim();
+            const taskDesc = descInput.value.trim();
+
+            if (!taskName) {
+                alert('请先输入任务名称');
+                return;
+            }
+
+            const btn = taskEl.querySelector('.decompose-btn');
+            btn.textContent = '🤖 拆解中...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('/api/decompose', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        task_name: taskName,
+                        task_description: taskDesc
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.sub_tasks.length > 0) {
+                    const editArea = taskEl.querySelector('.sub-tasks-edit-area');
+                    const listDiv = editArea.querySelector('.sub-tasks-list');
+                    listDiv.innerHTML = data.sub_tasks.map((sub, i) => `
+                        <div class="sub-task-edit-item">
+                            <input type="text" value="${sub.name}" class="sub-task-name-input">
+                            <select class="sub-task-status-select">
+                                <option value="pending" selected>未开始</option>
+                                <option value="completed">已完成</option>
+                            </select>
+                        </div>
+                    `).join('');
+                    editArea.style.display = 'block';
+                    btn.textContent = '🤖 已生成子任务';
+                } else {
+                    alert('AI拆解失败，请重试');
+                    btn.textContent = '🤖 AI拆解子任务';
+                }
+            } catch (error) {
+                alert('调用失败: ' + error.message);
+                btn.textContent = '🤖 AI拆解子任务';
+            }
+
+            btn.disabled = false;
+        }
+
+        function confirmSubTasks(taskId) {
+            const taskEl = document.getElementById(taskId);
+            const editArea = taskEl.querySelector('.sub-tasks-edit-area');
+            const listDiv = editArea.querySelector('.sub-tasks-list');
+
+            const subTasks = [];
+            listDiv.querySelectorAll('.sub-task-edit-item').forEach((item, index) => {
+                const nameInput = item.querySelector('.sub-task-name-input');
+                const statusSelect = item.querySelector('.sub-task-status-select');
+                if (nameInput.value.trim()) {
+                    subTasks.push({
+                        id: `sub_${Date.now()}_${index}`,
+                        name: nameInput.value.trim(),
+                        status: statusSelect.value
+                    });
+                }
+            });
+
+            pendingSubTasks[taskId] = subTasks;
+            editArea.style.display = 'none';
+
+            let existingSubContainer = taskEl.querySelector('.sub-tasks-container');
+            if (!existingSubContainer) {
+                existingSubContainer = document.createElement('div');
+                existingSubContainer.className = 'sub-tasks-container';
+                existingSubContainer.id = `display_sub_${taskId}`;
+                taskEl.appendChild(existingSubContainer);
+            }
+
+            existingSubContainer.innerHTML = subTasks.map(sub => `
+                <div class="sub-task-display-item">
+                    <span>• ${sub.name}</span>
+                    <span class="status-${sub.status}">${sub.status === 'pending' ? '未开始' : '已完成'}</span>
+                </div>
+            `).join('');
+
+            const btn = taskEl.querySelector('.decompose-btn');
+            if (btn) btn.style.display = 'none';
+        }
+
+        function collectTasks() {
+            const tasks = [];
+
+            document.querySelectorAll('#shortTermList .task-item').forEach((item, index) => {
+                const nameInput = item.querySelector('.task-name-input');
+                const textarea = item.querySelector('textarea');
+                const dateInput = item.querySelector('input[type="date"]');
+
+                const taskName = nameInput?.value?.trim();
+                if (!taskName) return;
+
+                const subTasks = pendingSubTasks[item.id] || [];
+                if (subTasks.length === 0) {
+                    const displayContainer = item.querySelector('.sub-tasks-container');
+                    if (displayContainer) {
+                        const items = displayContainer.querySelectorAll('.sub-task-display-item');
+                        if (items.length === 0) return;
+                    }
+                }
+
+                tasks.push({
+                    id: `task_${Date.now()}_${index}`,
+                    name: taskName,
+                    description: textarea.value.trim(),
+                    status: 'pending',
+                    deadline: dateInput?.value || null,
+                    sub_tasks: subTasks,
+                    created_at: new Date().toISOString()
+                });
+            });
+
+            return { tasks };
+        }
+
+        async function saveTasks() {
+            const tasksData = collectTasks();
+
+            if (tasksData.tasks.length === 0) {
+                alert('请先添加任务');
+                return;
+            }
+
+            for (const task of tasksData.tasks) {
+                if (!task.sub_tasks || task.sub_tasks.length === 0) {
+                    alert('请先为任务"' + task.name + '"点击"AI拆解子任务"按钮');
+                    return;
+                }
+            }
+
+            try {
+                const response = await fetch('/api/tasks', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(tasksData)
+                });
+
+                if (response.ok) {
+                    showMessage('保存成功！');
+                    setTimeout(() => {
+                        window.location.href = '/tasks';
+                    }, 1500);
+                } else {
+                    alert('保存失败，请重试');
+                }
+            } catch (error) {
+                alert('保存失败: ' + error.message);
+            }
+        }
+
+        function showMessage(text) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.style.display = 'block';
+            msg.style.position = 'fixed';
+            msg.style.top = '50%';
+            msg.style.left = '50%';
+            msg.style.transform = 'translate(-50%, -50%)';
+            msg.style.background = '#4CAF50';
+            msg.style.color = 'white';
+            msg.style.padding = '20px 40px';
+            msg.style.borderRadius = '10px';
+            msg.style.fontSize = '18px';
+            msg.style.zIndex = '9999';
+        }
+
+        async function loadExistingTasks() {
+            try {
+                const response = await fetch('/api/tasks');
+                const data = await response.json();
+
+                if (data.tasks) {
+                    data.tasks.forEach(task => {
+                        const list = document.getElementById('shortTermList');
+                        const el = createTaskElement('existing', task);
+                        list.appendChild(el);
+
+                        if (task.sub_tasks?.length) {
+                            pendingSubTasks[el.id] = task.sub_tasks.map(s => ({
+                                id: s.id,
+                                name: s.name,
+                                status: s.status
+                            }));
+                        }
+                    });
+                }
+            } catch (error) {
+                console.log('暂无保存的任务');
+            }
+        }
+
+        window.onload = loadExistingTasks;
+    </script>
+</body>
+</html>
